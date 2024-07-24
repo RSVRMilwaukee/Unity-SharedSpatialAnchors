@@ -67,12 +67,19 @@ public class SharedAnchor : MonoBehaviour
     {
         set
         {
+            isSavedLocally = value;
             if (saveIcon != null)
             {
                 saveIcon.color = value ? greenColor : grayColor;
             }
         }
+        get
+        {
+            return isSavedLocally;
+        }
     }
+
+    private bool isSavedLocally;
 
     private bool IsSelectedForShare
     {
@@ -89,12 +96,19 @@ public class SharedAnchor : MonoBehaviour
     {
         set
         {
+            isSelectedForAlign = value;
             if (alignIcon != null)
             {
                 alignIcon.color = value ? greenColor : grayColor;
             }
         }
+        get
+        {
+            return isSelectedForAlign;
+        }
     }
+
+    bool isSelectedForAlign;
 
     private void Awake()
     {

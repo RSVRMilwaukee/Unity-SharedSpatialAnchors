@@ -119,7 +119,7 @@ public class SampleController : MonoBehaviour
             StartCoroutine(WaitingForAnchorLocalization());
     }
 
-    private System.Collections.IEnumerator WaitingForAnchorLocalization()
+    public System.Collections.IEnumerator WaitingForAnchorLocalization()
     {
         while (!colocationAnchor.GetComponent<OVRSpatialAnchor>().Localized)
         {

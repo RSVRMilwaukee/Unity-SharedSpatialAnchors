@@ -33,7 +33,7 @@ public class AlignPlayer : MonoBehaviour
     private Transform playerHands;
 
     public static AlignPlayer Instance;
-    private SharedAnchor _currentAlignmentAnchor;
+    public SharedAnchor _currentAlignmentAnchor;
     private CachedSharedAnchor _currentCachedAlignmentAnchor;
     private Coroutine _realignCoroutine;
 
