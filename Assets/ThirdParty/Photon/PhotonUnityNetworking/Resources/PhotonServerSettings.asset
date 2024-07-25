@@ -49,6 +49,9 @@ MonoBehaviour:
   - SendSessionStart
   - CheckForLocalAnchors
   - OnColocatedAck
+  - ShareAnchorGUID
+  - SendAnchorInfo
+  - RpcSendAnchorInfo
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

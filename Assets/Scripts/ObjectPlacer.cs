@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ObjectPlacer : MonoBehaviour
+public class ObjectPlacer : MonoBehaviourPunCallbacks
 {
     public bool isInSetupMode;
     public OVRSpatialAnchor worldAnchor;
@@ -24,46 +25,48 @@ public class ObjectPlacer : MonoBehaviour
 
     public SpatialAnchorManager anchorManager;
     public LineRenderer line;
-    public SampleController controller;
     SharedAnchor colocationAnchor;
 
-    public bool readyToPlaceWorldAnchor = false;
-    bool isWorldAnchor = false;
-
+    bool canPlaceWorldAnchor;
+    int objectIndex;
     void Start()
     {
         line = GetComponent<LineRenderer>();
     }
 
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+
+        objectPallette.SetActive(true);
+
+        if (PhotonNetwork.IsMasterClient)
+            canPlaceWorldAnchor = true;
+    }
+
     void Update()
     {
-        if (readyToPlaceWorldAnchor)
+        if (canPlaceWorldAnchor)
         {
             if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
             {
-                readyToPlaceWorldAnchor = false;
-                isWorldAnchor = true;
                 colocationAnchor = Instantiate(worldAnchor, transform.position, transform.rotation).GetComponent<SharedAnchor>();
-                StartCoroutine(SaveAndShareAnchor());
-            }
+                StartCoroutine(SaveAndShareWorldAnchor());
 
+                canPlaceWorldAnchor = false;
+            }
             return;
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
         {
-            OVRSpatialAnchor anchorPrefab = ObjectDatabase.instance.items[0];
+            OVRSpatialAnchor anchorPrefab = ObjectDatabase.Instance.items[objectIndex];
+            
 
-            colocationAnchor = Instantiate(anchorPrefab, transform.position, transform.rotation).GetComponent<SharedAnchor>();
+            OVRSpatialAnchor anchorInstance = Instantiate(anchorPrefab, transform.position, transform.rotation);
+            colocationAnchor = anchorInstance.GetComponent<SharedAnchor>();
 
-            StartCoroutine(SaveAndShareAnchor());
-
-            //OVRSpatialAnchor anchorPrefab = ObjectDatabase.instance.GetItemByID(currentSelectedObject.itemID);
-            //spawnedItem = anchorManager.CreateSpatialAnchor(anchorPrefab, previewInstance.transform.position, previewInstance.transform.rotation).gameObject;
-
-            //currentSelectedObject = null;
-            //Destroy(previewInstance);
-            //saveAnchorPallette.SetActive(true);
+            StartCoroutine(SaveAndShareAnchor(anchorInstance));
         }
     }
 
@@ -161,19 +164,54 @@ public class ObjectPlacer : MonoBehaviour
     //        line.enabled = false;
     //}
 
+    public void SelectObjectNumber(int objectIndexNumber)
+    {
+        objectIndex = objectIndexNumber;
+    }
 
-    IEnumerator SaveAndShareAnchor()
+
+
+    IEnumerator SaveAndShareWorldAnchor()
     {
         colocationAnchor.OnSaveLocalButtonPressed();
-        yield return new WaitForSeconds(2);
-        colocationAnchor.OnShareButtonPressed();
-        yield return new WaitForSeconds(2);
-        //StartCoroutine(controller.WaitingForAnchorLocalization());
 
-        if(isWorldAnchor)
-        {
-            colocationAnchor.OnAlignButtonPressed();
-        }
+        SampleController.Instance.Log("RSVR: Saving world anchor locally");
+        yield return new WaitForSeconds(2);
+        
+        colocationAnchor.OnShareButtonPressed();
+        SampleController.Instance.Log("RSVR: Trying to share world anchor");
+
+        yield return new WaitForSeconds(2);
+
+        colocationAnchor.OnAlignButtonPressed();
+        SampleController.Instance.Log("RSVR: Trying to align world anchor");
+    }
+
+    IEnumerator SaveAndShareAnchor(OVRSpatialAnchor spatialAnchor)
+    {
+        Debug.LogError($"Spatial Anchor (Before Save): " + spatialAnchor);
+        Debug.LogError($"Spatial Anchor UUID (Before Save): " + spatialAnchor.Uuid);
+        colocationAnchor.OnSaveLocalButtonPressed();
+
+        SampleController.Instance.Log("RSVR: Saving anchor locally");
+        yield return new WaitForSeconds(2);
+
+        Debug.LogError($"Spatial Anchor (After Save): " + spatialAnchor);
+        Debug.LogError($"Spatial Anchor UUID (After Save): " + spatialAnchor.Uuid);
+
+        Debug.LogError($"RSVR: item {ObjectDatabase.Instance.items[objectIndex]}");
+        Debug.LogError($"RSVR: item id {ObjectDatabase.Instance.items[objectIndex].GetComponent<Item>().id}");
+        Debug.LogError($"RSVR: OVRSpatialAnchor {spatialAnchor}");
+        Debug.LogError($"RSVR: uuid {colocationAnchor.GetComponent<OVRSpatialAnchor>().Uuid.ToString()}");
+
+        string uuid = spatialAnchor.Uuid.ToString();
+
+
+        NetworkManager.Instance.SendAnchorInfo(uuid, objectIndex);
+        yield return new WaitForSeconds(2);
+
+        colocationAnchor.OnShareButtonPressed();
+        SampleController.Instance.Log("RSVR: Trying to share anchor");
     }
 
     public void SaveAnchor()

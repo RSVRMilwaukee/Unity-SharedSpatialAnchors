@@ -113,13 +113,13 @@ public class AnchorLoader : MonoBehaviour
 
         string itemId = PlayerPrefs.GetString(unboundAnchor.Uuid.ToString());
 
-        if (ObjectDatabase.instance == null)
+        if (ObjectDatabase.Instance == null)
         {
             Debug.LogError("ObjectDatabase.Instance is null");
             return;
         }
 
-        var item = ObjectDatabase.instance.GetItemByID(itemId);
+        var item = ObjectDatabase.Instance.GetItemByID(itemId);
         if (item == null)
         {
             Debug.LogError($"Item with ID {itemId} not found in ObjectDatabase");

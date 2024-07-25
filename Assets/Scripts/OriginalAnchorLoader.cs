@@ -97,7 +97,7 @@ public class OriginalAnchorLoader : MonoBehaviour
 
         string itemId = PlayerPrefs.GetString(unboundAnchor.Uuid.ToString());
 
-        anchorPrefab = ItemDatabase.Instance.GetItemById(itemId).GetComponent<OVRSpatialAnchor>();
+        anchorPrefab = ObjectDatabase.Instance.GetItemByID(itemId).GetComponent<OVRSpatialAnchor>();
 
         // Instantiate a new spatial anchor at the pose position and rotation
         var spatialAnchor = Instantiate(anchorPrefab, pose.position, pose.rotation);

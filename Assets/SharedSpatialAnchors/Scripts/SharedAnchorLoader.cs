@@ -255,6 +255,8 @@ public class SharedAnchorLoader : MonoBehaviour
     {
         foreach (var unboundAnchor in unboundAnchors)
         {
+
+            SampleController.Instance.Log("trying to spawn Unbound Anchor");
             OVRSpatialAnchor anchorToBind = InstantiateUnboundAnchor();
 
             if (anchorToBind != null)
@@ -278,7 +280,7 @@ public class SharedAnchorLoader : MonoBehaviour
                 }
 
                 SampleController.Instance.Log($"Anchor created and bound to cloud anchor {anchorToBind.Uuid}");
-
+                SampleController.Instance.Log($"Spawned anchor name is {anchorToBind.name}");
                 _loadedAnchorUuids.Add(anchorToBind.Uuid);
                 if (queryMode == AnchorQueryMode.CLOUD)
                     RecievedSharedAnchored(anchorToBind);
@@ -299,6 +301,8 @@ public class SharedAnchorLoader : MonoBehaviour
     private OVRSpatialAnchor InstantiateUnboundAnchor()
     {
         var spatialAnchor = Instantiate(SampleController.Instance.anchorPrefab);
+
+        SampleController.Instance.Log($"Spawned {spatialAnchor}");
 
         var sharedAnchor = spatialAnchor.GetComponent<SharedAnchor>();
         if (sharedAnchor != null && queryMode == AnchorQueryMode.CLOUD)

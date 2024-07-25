@@ -8,11 +8,11 @@ public class ObjectDatabase : MonoBehaviour
     public List<OVRSpatialAnchor> items;
     public List<Item> previzPrefabs;
 
-    public static ObjectDatabase instance;
+    public static ObjectDatabase Instance;
 
     public void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     public GameObject GetItemPreview(string id)

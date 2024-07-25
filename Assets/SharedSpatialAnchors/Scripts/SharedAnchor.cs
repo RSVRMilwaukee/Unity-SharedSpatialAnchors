@@ -122,13 +122,13 @@ public class SharedAnchor : MonoBehaviour
             yield return null;
         }
 
-        if (_spatialAnchor != null)
+        if (anchorName && _spatialAnchor != null)
         {
             anchorName.text = _spatialAnchor.Uuid.ToString("D");
         }
         else
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
         }
 
         if (SampleController.Instance.automaticCoLocation)
