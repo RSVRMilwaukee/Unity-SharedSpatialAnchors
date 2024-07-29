@@ -6,7 +6,7 @@ using UnityEngine;
 public class ObjectDatabase : MonoBehaviour
 {
     public List<OVRSpatialAnchor> items;
-    public List<Item> previzPrefabs;
+    public List<GameObject> previzPrefabs;
 
     public static ObjectDatabase Instance;
 

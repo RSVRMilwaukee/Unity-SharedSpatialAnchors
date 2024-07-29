@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1844379585756122448}
   - component: {fileID: 5956026470698994765}
   - component: {fileID: 7470672696447013376}
+  - component: {fileID: 4068085456680259826}
   m_Layer: 0
   m_Name: Office_Chair_SA
   m_TagString: Untagged
@@ -153,3 +154,17 @@ MonoBehaviour:
   alignIcon: {fileID: 0}
   grayColor: {r: 0, g: 0, b: 0, a: 0}
   greenColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &4068085456680259826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8791733715882268417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a622636c9c73acd47ab966cfde0f7a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFloorObject: 0
+  id: 

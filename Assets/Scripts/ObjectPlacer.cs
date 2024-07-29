@@ -25,7 +25,13 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
 
     public SpatialAnchorManager anchorManager;
     public LineRenderer line;
+    public bool placeObjectRayActive = false;
+    public Transform spatialAnchorPrefabSpawnPosition;
+    private GameObject previzPrefab;
+
     SharedAnchor colocationAnchor;
+
+
 
     bool canPlaceWorldAnchor;
     int objectIndex;
@@ -38,7 +44,7 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        objectPallette.SetActive(true);
+        //objectPallette.SetActive(true);
 
         if (PhotonNetwork.IsMasterClient)
             canPlaceWorldAnchor = true;
@@ -46,6 +52,46 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        if(placeObjectRayActive == true)
+        {
+            //Ray ray = new Ray(OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch), OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch) * Vector3.forward);
+            Ray ray = new Ray(transform.position, transform.rotation * Vector3.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                //Debug.LogError($"Hit: {hit}");
+                line.enabled = true;
+
+                line.SetPosition(0, transform.position);
+                line.SetPosition(1, hit.point);
+                //spatialAnchorPrefabSpawnPosition.position = hit.point;
+
+
+
+
+            }
+
+
+            if (previzPrefab)
+            {
+                previzPrefab.transform.position = hit.point;
+
+                if(OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.RTouch))
+                {
+                    previzPrefab.transform.Rotate(new Vector3(0, rotationAmount, 0), Space.Self);
+                }
+
+                if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.RTouch))
+                {
+                    previzPrefab.transform.Rotate(new Vector3(0, -rotationAmount, 0), Space.Self);
+                }
+            }
+
+
+
+
+
+        }
+
         if (canPlaceWorldAnchor)
         {
             if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.RTouch))
@@ -58,17 +104,36 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
+        if (previzPrefab && OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.RTouch))
         {
             OVRSpatialAnchor anchorPrefab = ObjectDatabase.Instance.items[objectIndex];
             
 
-            OVRSpatialAnchor anchorInstance = Instantiate(anchorPrefab, transform.position, transform.rotation);
-            colocationAnchor = anchorInstance.GetComponent<SharedAnchor>();
-
+            OVRSpatialAnchor anchorInstance = Instantiate(anchorPrefab, previzPrefab.transform.position, previzPrefab.transform.rotation);
+            colocationAnchor = anchorInstance.GetComponent<SharedAnchor>();            
             StartCoroutine(SaveAndShareAnchor(anchorInstance));
+
+            DestroyPreviewPrefab();
+
+
         }
     }
+
+    public void SpawnPreviewPrefab()
+    {
+        previzPrefab = PhotonNetwork.Instantiate(ObjectDatabase.Instance.previzPrefabs[objectIndex].name.ToString(), transform.position, new Quaternion(0,0,0,0));
+
+
+    }
+
+    public void DestroyPreviewPrefab()
+    {
+        if (previzPrefab)
+        {
+            PhotonNetwork.Destroy(previzPrefab);
+        }
+    }
+
 
     //void Update()
     //{
@@ -167,6 +232,9 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
     public void SelectObjectNumber(int objectIndexNumber)
     {
         objectIndex = objectIndexNumber;
+        placeObjectRayActive = true;
+        SpawnPreviewPrefab();
+        
     }
 
 
@@ -200,7 +268,7 @@ public class ObjectPlacer : MonoBehaviourPunCallbacks
         Debug.LogError($"Spatial Anchor UUID (After Save): " + spatialAnchor.Uuid);
 
         Debug.LogError($"RSVR: item {ObjectDatabase.Instance.items[objectIndex]}");
-        Debug.LogError($"RSVR: item id {ObjectDatabase.Instance.items[objectIndex].GetComponent<Item>().id}");
+        //Debug.LogError($"RSVR: item id {ObjectDatabase.Instance.items[objectIndex].GetComponent<Item>().id}");
         Debug.LogError($"RSVR: OVRSpatialAnchor {spatialAnchor}");
         Debug.LogError($"RSVR: uuid {colocationAnchor.GetComponent<OVRSpatialAnchor>().Uuid.ToString()}");
 

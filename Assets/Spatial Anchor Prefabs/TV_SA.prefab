@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7307731124477600735}
   - component: {fileID: -791449612367766844}
   - component: {fileID: -4024603213816602183}
+  - component: {fileID: 6933501034196347139}
   m_Layer: 0
   m_Name: TV_SA
   m_TagString: Untagged
@@ -153,3 +154,17 @@ MonoBehaviour:
   alignIcon: {fileID: 0}
   grayColor: {r: 0, g: 0, b: 0, a: 0}
   greenColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &6933501034196347139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2342482182024843148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a622636c9c73acd47ab966cfde0f7a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFloorObject: 0
+  id: 

@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 5442157649853604060}
   - component: {fileID: 3753799646021626432}
   - component: {fileID: 2111172239727491125}
+  - component: {fileID: 309405590938169680}
   m_Layer: 0
   m_Name: Waste Bin_SA
   m_TagString: Untagged
@@ -185,3 +186,17 @@ MonoBehaviour:
   alignIcon: {fileID: 0}
   grayColor: {r: 0, g: 0, b: 0, a: 0}
   greenColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &309405590938169680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6668421202446454960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a622636c9c73acd47ab966cfde0f7a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFloorObject: 0
+  id: 
